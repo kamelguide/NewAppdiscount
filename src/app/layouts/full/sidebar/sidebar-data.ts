@@ -9,15 +9,23 @@ export const navItems: NavItem[] = [
     iconName: 'layout-grid-add',
     route: '/dashboard',
   },
-
   {
     navCap: 'Tables',
   },
   {
-    displayName: 'Tables',
-    iconName: 'table',
-    route: '/ui-components/tables',
+    displayName: 'Products',
+    iconName: 'brand-minecraft',
+    route: '/ui-components/products',
+  },  {
+    displayName: 'Coupon',
+    iconName: 'ticket',
+    route: '/ui-components/Coupon',
   },
+
+
+
+
+
   {
     navCap: 'Auth',
   },
