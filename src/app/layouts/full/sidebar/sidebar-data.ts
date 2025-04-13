@@ -16,10 +16,21 @@ export const navItems: NavItem[] = [
     displayName: 'Products',
     iconName: 'brand-minecraft',
     route: '/ui-components/products',
-  },  {
+  },
+  {
     displayName: 'Coupon',
     iconName: 'ticket',
     route: '/ui-components/Coupon',
+  },
+  {
+    displayName: 'Discount',
+    iconName: 'discount',
+    route: '/ui-components/discount',
+  },
+  {
+    displayName: 'LinkedProduct',
+    iconName: 'discount-check',
+    route: '/ui-components/linkedProductDiscount',
   },
 
 
