@@ -1,18 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
-
-interface Product {
-  idproduct: number;
-  referenceProduct: string;
-  description: string;
-  comment: string;
-  price: number;
-  quantiteDiscount: number;
-  image: string;
-  status: 'in-stock' | 'out-of-stock' | 'low-stock';
-  id_category: number;
-  categorie: string;
-}
+import { Product } from "./product.data";
+import { ProductService } from './product.service';  // Import ProductService
 
 @Component({
   selector: 'app-products',
@@ -21,49 +10,13 @@ interface Product {
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent {
-  products: Product[] = [
-    {
-      idproduct: 1,
-      referenceProduct: 'REF-001',
-      description: 'Smartphone X',
-      comment: 'Latest model with advanced features',
-      price: 799.99,
-      quantiteDiscount: 5,
-      image: 'assets/images/products/product-1.png',
-      status: 'in-stock',
-      id_category: 1,
-      categorie: 'Electronics'
-    },
-    {
-      idproduct: 2,
-      referenceProduct: 'REF-002',
-      description: 'Laptop Pro',
-      comment: 'High performance laptop',
-      price: 1299.99,
-      quantiteDiscount: 10,
-      image: 'assets/images/products/product-2.png',
-      status: 'out-of-stock',
-      id_category: 1,
-      categorie: 'Electronics'
-    },
-    {
-      idproduct: 3,
-      referenceProduct: 'REF-003',
-      description: 'Wireless Headphones',
-      comment: 'Noise cancelling technology',
-      price: 199.99,
-      quantiteDiscount: 3,
-      image: 'assets/images/products/product-3.png',
-      status: 'low-stock',
-      id_category: 2,
-      categorie: 'Audio'
-    }
-  ];
+export class ProductsComponent implements OnInit {
+  products: Product[] = [];  // Start with an empty array
+  selectedProduct: Product | null = null;  // Holds the product to be edited
 
   productTableConfig = {
     title: 'Product Inventory',
-    dataSource: this.products,
+    dataSource: this.products,  // Bind to dynamic products array
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (product: Product) => this.editProduct(product) },
@@ -123,8 +76,56 @@ export class ProductsComponent {
     ]
   };
 
+  constructor(private productService: ProductService) {}
+
+  ngOnInit(): void {
+    this.getProducts();  // Fetch data when the component initializes
+  }
+
+  getProducts(): void {
+    this.productService.getProducts().subscribe(
+      (data: Product[]) => {
+        this.products = data;  // Assign the fetched data to the products array
+        this.productTableConfig.dataSource = this.products;  // Update the table with new data
+      },
+      error => {
+        console.error('Error fetching products:', error);
+      }
+    );
+  }
+
+  // editProduct(product: Product) {
+  //   // Open the product in the edit form (or directly enable editing in the table)
+  //   this.selectedProduct = { ...product };  // Copy the selected product data
+  //   console.log('Editing product:', product);
+  // }
+
   editProduct(product: Product) {
-    console.log('Editing product:', product);
+    // When clicking on "Edit", set the selectedProduct to the clicked product
+    this.selectedProduct = { ...product };  // Create a copy of the product to avoid modifying the original directly
+    console.log('Editing product:', this.selectedProduct);
+  }
+
+  updateProduct(): void {
+    if (this.selectedProduct) {
+      // Call the updateProduct method from the ProductService
+      this.productService.updateProduct(this.selectedProduct.idproduct, this.selectedProduct).subscribe(
+        (updatedProduct: Product) => {
+          console.log('Updated product:', updatedProduct);
+          // Update the product in the table
+          const index = this.products.findIndex(p => p.idproduct === updatedProduct.idproduct);
+          if (index !== -1) {
+            this.products[index] = updatedProduct;
+            this.productTableConfig.dataSource = [...this.products];  // Refresh the table with updated data
+          }
+          // Clear the selected product after update
+          this.selectedProduct = null;
+        },
+        error => {
+          console.error('Error updating product:', error);
+        }
+      );
+    }
   }
 
   deleteProduct(product: Product) {

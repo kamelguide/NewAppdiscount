@@ -1,15 +1,8 @@
-// discount.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
-
-interface Discount {
-  idDisc: number;
-  refDisc: string;
-  type: string;
-  valeur: number;
-  recouvrement: string;
-  idLink: number;
-}
+import { Discount } from "./dicount.data";
+import { DiscountService } from './discount.service';
+import {Product} from "../products/product.data";  // Import DiscountService
 
 @Component({
   selector: 'app-discount',
@@ -18,37 +11,13 @@ interface Discount {
   templateUrl: './discount.component.html',
   styleUrls: ['./discount.component.scss']
 })
-export class DiscountComponent {
-  discounts: Discount[] = [
-    {
-      idDisc: 1,
-      refDisc: 'DISC-2023-001',
-      type: 'Percentage',
-      valeur: 15.0,
-      recouvrement: 'Automatic',
-      idLink: 101
-    },
-    {
-      idDisc: 2,
-      refDisc: 'DISC-2023-002',
-      type: 'Fixed Amount',
-      valeur: 50.0,
-      recouvrement: 'Manual',
-      idLink: 102
-    },
-    {
-      idDisc: 3,
-      refDisc: 'DISC-2023-003',
-      type: 'Seasonal',
-      valeur: 20.0,
-      recouvrement: 'Automatic',
-      idLink: 103
-    }
-  ];
+export class DiscountComponent implements OnInit {
+  discounts: Discount[] = [];  // Start with an empty array
 
+  // Table configuration
   discountTableConfig = {
     title: 'Discount Management',
-    dataSource: this.discounts,
+    dataSource: this.discounts,  // Bind to dynamic discounts array
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (discount: Discount) => this.editDiscount(discount) },
@@ -104,14 +73,28 @@ export class DiscountComponent {
         `,
         cellClass: ''
       },
-      {
-        name: 'link',
-        header: 'Link ID',
-        cell: (discount: Discount) => discount.idLink.toString(),
-        cellClass: ''
-      }
+
     ]
   };
+
+  constructor(private discountService: DiscountService) {}
+
+  ngOnInit(): void {
+    this.getDiscounts();  // Fetch data when the component initializes
+  }
+
+  getDiscounts(): void {
+    this.discountService.getDiscountProduct().subscribe(
+      (data: Discount[]) => {
+        console.log('Fetched Discounts:', data);  // Log data to check if all rows are being returned
+        this.discounts = data;  // Assign the fetched data to the discounts array
+        this.discountTableConfig.dataSource = this.discounts;  // Update the table with new data
+      },
+      // error => {
+      // //   console.error('Error fetching discounts:', error);
+      // }
+    );
+  }
 
   editDiscount(discount: Discount) {
     console.log('Editing discount:', discount);

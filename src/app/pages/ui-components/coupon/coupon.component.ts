@@ -1,15 +1,7 @@
-// coupon.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
-
-interface Coupon {
-  id: number;
-  couponCode: string;
-  productReference: string;
-  discountValue: number;
-  status: string;
-  idLink: number;
-}
+import { GetCouponTracking } from "./coupon.data";
+import { CouponService } from './coupon.service';  // Import your service
 
 @Component({
   selector: 'app-coupon',
@@ -18,49 +10,23 @@ interface Coupon {
   templateUrl: './coupon.component.html',
   styleUrls: ['./coupon.component.scss']
 })
-export class CouponComponent {
-  coupons: Coupon[] = [
-    {
-      id: 1,
-      couponCode: 'SUMMER2023',
-      productReference: 'REF-001',
-      discountValue: 15.0,
-      status: 'active',
-      idLink: 101
-    },
-    {
-      id: 2,
-      couponCode: 'WINTERSALE',
-      productReference: 'REF-002',
-      discountValue: 20.0,
-      status: 'expired',
-      idLink: 102
-    },
-    {
-      id: 3,
-      couponCode: 'NEWUSER10',
-      productReference: 'REF-003',
-      discountValue: 10.0,
-      status: 'active',
-      idLink: 103
-    }
-  ];
-
+export class CouponComponent implements OnInit {
+  coupons: GetCouponTracking[] = []; // Start with an empty array
   couponTableConfig = {
     title: 'Coupon Management',
     dataSource: this.coupons,
     showMenu: true,
     menuItems: [
-      { icon: 'edit', label: 'Edit', action: (coupon: Coupon) => this.editCoupon(coupon) },
-      { icon: 'delete', label: 'Delete', action: (coupon: Coupon) => this.deleteCoupon(coupon) },
-      { icon: 'visibility', label: 'View', action: (coupon: Coupon) => this.viewCoupon(coupon) }
+      { icon: 'edit', label: 'Edit', action: (coupon: GetCouponTracking) => this.editCoupon(coupon) },
+      { icon: 'delete', label: 'Delete', action: (coupon: GetCouponTracking) => this.deleteCoupon(coupon) },
+      { icon: 'visibility', label: 'View', action: (coupon: GetCouponTracking) => this.viewCoupon(coupon) }
     ],
     columns: [
       {
         name: 'couponCode',
         header: 'Coupon Code',
         headerClass: 'font-bold',
-        cell: (coupon: Coupon) => `
+        cell: (coupon: GetCouponTracking) => `
           <div class="f-s-14 f-w-600">${coupon.couponCode}</div>
           <div class="f-s-14 f-w-600">ID: ${coupon.id}</div>
         `
@@ -68,17 +34,27 @@ export class CouponComponent {
       {
         name: 'productReference',
         header: 'Product Reference',
-        cell: (coupon: Coupon) => coupon.productReference
+        cell: (coupon: GetCouponTracking) => coupon.productReference
       },
       {
         name: 'discountValue',
         header: 'Discount Value',
-        cell: (coupon: Coupon) => `${coupon.discountValue}%`
+        cell: (coupon: GetCouponTracking) => `${coupon.discountValue}%`
+      },
+      {
+        name: 'email',
+        header: 'Email',
+        cell: (coupon: GetCouponTracking) => `${coupon.email}`
+      },
+      {
+        name: 'sentDate',
+        header: 'Sent Date',
+        cell: (coupon: GetCouponTracking) => `${coupon.sentDate}`
       },
       {
         name: 'status',
         header: 'Status',
-        cell: (coupon: Coupon) => {
+        cell: (coupon: GetCouponTracking) => {
           if (coupon.status === 'active') {
             return `<span class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-12">Active</span>`;
           } else if (coupon.status === 'expired') {
@@ -91,20 +67,38 @@ export class CouponComponent {
       {
         name: 'idLink',
         header: 'Link ID',
-        cell: (coupon: Coupon) => coupon.idLink.toString()
+        cell: (coupon: GetCouponTracking) => coupon.idLink.toString()
       }
     ]
   };
 
-  editCoupon(coupon: Coupon) {
+  constructor(private couponService: CouponService) {}
+
+  ngOnInit(): void {
+    this.getCoupons();  // Fetch data when the component initializes
+  }
+
+  getCoupons(): void {
+    this.couponService.getCoupons().subscribe(
+      (data: GetCouponTracking[]) => {
+        this.coupons = data;  // Assign the fetched data to the coupons array
+        this.couponTableConfig.dataSource = this.coupons;  // Update the table with new data
+      },
+      error => {
+        console.error('Error fetching coupons:', error);
+      }
+    );
+  }
+
+  editCoupon(coupon: GetCouponTracking) {
     console.log('Editing coupon:', coupon);
   }
 
-  deleteCoupon(coupon: Coupon) {
+  deleteCoupon(coupon: GetCouponTracking) {
     console.log('Deleting coupon:', coupon);
   }
 
-  viewCoupon(coupon: Coupon) {
+  viewCoupon(coupon: GetCouponTracking) {
     console.log('Viewing coupon:', coupon);
   }
 }

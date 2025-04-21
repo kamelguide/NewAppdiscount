@@ -1,20 +1,7 @@
-// link-product-discount.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
-
-interface ProductDiscountLink {
-  idLink: number;
-  active: boolean;
-  duration: number;
-  valideFrom: string;
-  valideTo: string;
-  priority: string;
-  product: string;
-  idProduct: number;
-  discountedPrice: number;
-  idDisc: number;
-  refDisc: string;
-}
+import { ProductDiscountLink } from "./linkProduct.data";
+import { LinkProductService } from './link-product.service';  // Import LinkProductService
 
 @Component({
   selector: 'app-link-product-discount',
@@ -23,52 +10,11 @@ interface ProductDiscountLink {
   templateUrl: './link-product-discount.component.html',
   styleUrls: ['./link-product-discount.component.scss']
 })
-export class LinkProductDiscountComponent {
-  discountLinks: ProductDiscountLink[] = [
-    {
-      idLink: 1,
-      active: true,
-      duration: 30,
-      valideFrom: '2023-11-01',
-      valideTo: '2023-11-30',
-      priority: 'high',
-      product: 'Smartphone X',
-      idProduct: 101,
-      discountedPrice: 699.99,
-      idDisc: 1001,
-      refDisc: 'DISC-2023-1001'
-    },
-    {
-      idLink: 2,
-      active: false,
-      duration: 15,
-      valideFrom: '2023-10-15',
-      valideTo: '2023-10-30',
-      priority: 'medium',
-      product: 'Laptop Pro',
-      idProduct: 102,
-      discountedPrice: 1099.99,
-      idDisc: 1002,
-      refDisc: 'DISC-2023-1002'
-    },
-    {
-      idLink: 3,
-      active: true,
-      duration: 7,
-      valideFrom: '2023-12-01',
-      valideTo: '2023-12-07',
-      priority: 'low',
-      product: 'Wireless Headphones',
-      idProduct: 103,
-      discountedPrice: 149.99,
-      idDisc: 1003,
-      refDisc: 'DISC-2023-1003'
-    }
-  ];
-
+export class LinkProductDiscountComponent implements OnInit {
+  discountLinks: ProductDiscountLink[] = [];  // Start with an empty array
   discountLinkTableConfig = {
     title: 'Product Discount Links',
-    dataSource: this.discountLinks,
+    dataSource: this.discountLinks,  // Bind to dynamic discountLinks array
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (link: ProductDiscountLink) => this.editLink(link) },
@@ -89,19 +35,14 @@ export class LinkProductDiscountComponent {
         `
       },
       {
-        name: 'discountInfo',
-        header: 'Discount Info',
-        cell: (link: ProductDiscountLink) => `
-          <div class="flex flex-col">
-            <div>Ref: ${link.refDisc}</div>
-            <div>ID: ${link.idDisc}</div>
-          </div>
-        `
-      },
-      {
         name: 'price',
         header: 'Discounted Price',
         cell: (link: ProductDiscountLink) => `$${link.discountedPrice.toFixed(2)}`
+      },
+      {
+        name: 'jours',
+        header: 'Jours',
+        cell: (link: ProductDiscountLink) => `${link.jours}`
       },
       {
         name: 'validity',
@@ -142,6 +83,25 @@ export class LinkProductDiscountComponent {
       }
     ]
   };
+
+  constructor(private linkProductService: LinkProductService) {}
+
+  ngOnInit(): void {
+    this.getLinkedProducts();  // Fetch data when the component initializes
+  }
+
+  getLinkedProducts(): void {
+    this.linkProductService.getLinkedProducts().subscribe(
+      (data: ProductDiscountLink[]) => {
+        console.log('Fetched Product Discount Links:', data);  // Log data to check if all rows are being returned
+        this.discountLinks = data;  // Assign the fetched data to the discountLinks array
+        this.discountLinkTableConfig.dataSource = this.discountLinks;  // Update the table with new data
+      },
+      error => {
+        console.error('Error fetching product discount links:', error);
+      }
+    );
+  }
 
   editLink(link: ProductDiscountLink) {
     console.log('Editing link:', link);
