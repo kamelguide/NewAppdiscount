@@ -11,9 +11,7 @@ import { ProductService } from './product.service';  // Import ProductService
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-  products: Product[] = [];  // Start with an empty array
-  selectedProduct: Product | null = null;  // Holds the product to be edited
-
+  products: Product[] = []; // Start with an empty array
   productTableConfig = {
     title: 'Product Inventory',
     dataSource: this.products,  // Bind to dynamic products array
@@ -94,38 +92,8 @@ export class ProductsComponent implements OnInit {
     );
   }
 
-  // editProduct(product: Product) {
-  //   // Open the product in the edit form (or directly enable editing in the table)
-  //   this.selectedProduct = { ...product };  // Copy the selected product data
-  //   console.log('Editing product:', product);
-  // }
-
   editProduct(product: Product) {
-    // When clicking on "Edit", set the selectedProduct to the clicked product
-    this.selectedProduct = { ...product };  // Create a copy of the product to avoid modifying the original directly
-    console.log('Editing product:', this.selectedProduct);
-  }
-
-  updateProduct(): void {
-    if (this.selectedProduct) {
-      // Call the updateProduct method from the ProductService
-      this.productService.updateProduct(this.selectedProduct.idproduct, this.selectedProduct).subscribe(
-        (updatedProduct: Product) => {
-          console.log('Updated product:', updatedProduct);
-          // Update the product in the table
-          const index = this.products.findIndex(p => p.idproduct === updatedProduct.idproduct);
-          if (index !== -1) {
-            this.products[index] = updatedProduct;
-            this.productTableConfig.dataSource = [...this.products];  // Refresh the table with updated data
-          }
-          // Clear the selected product after update
-          this.selectedProduct = null;
-        },
-        error => {
-          console.error('Error updating product:', error);
-        }
-      );
-    }
+    console.log('Editing product:', product);
   }
 
   deleteProduct(product: Product) {
