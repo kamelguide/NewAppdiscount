@@ -17,4 +17,14 @@ import {GetCouponTracking} from "./coupon.data";
   getCoupons(): Observable<GetCouponTracking[]> {
     return this.http.get<GetCouponTracking[]>(`${this.apiUrl}/api/coupons/trackinglogs`);
   }
+  sendCoupon(email: string, productReference: string, status: string, idLink: number): Observable<any> {
+    const payload = { email, productReference, status, idLink };
+    return this.http.post(`${this.apiUrl}/api/coupons/sendcoupon`, payload);
+  }
+  updateCouponStatus(id: number, status: string = 'used'): Observable<any> {
+    return this.http.put(`${this.apiUrl}/api/coupons/updateStatus/${id}`, null, {
+      params: { status }
+    });
+  }
+
 }

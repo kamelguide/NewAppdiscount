@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
 import { Product } from "./product.data";
-import { ProductService } from './product.service';  // Import ProductService
+import { ProductService } from './product.service';
+import {MatDialog} from "@angular/material/dialog";
+import {EditProductDialogComponent} from "./edit-product-dialog/edit-product-dialog.component";
+import {CreateProductDialogComponent} from "./create-product-dialog/create-product-dialog.component";
+import {MatButton} from "@angular/material/button";  // Import ProductService
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [MainTableComponent],
+  imports: [MainTableComponent, MatButton],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
@@ -74,7 +78,7 @@ export class ProductsComponent implements OnInit {
     ]
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getProducts();  // Fetch data when the component initializes
@@ -93,9 +97,45 @@ export class ProductsComponent implements OnInit {
   }
 
   editProduct(product: Product) {
-    console.log('Editing product:', product);
-  }
+    const dialogRef = this.dialog.open(EditProductDialogComponent, {
+      width: '500px',
+      data: { ...product }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.productService.updateProduct(result.idproduct, result).subscribe(
+          updated => {
+            const index = this.products.findIndex(p => p.idproduct === updated.idproduct);
+            if (index !== -1) {
+              this.products[index] = updated;
+              this.productTableConfig.dataSource = [...this.products]; // Refresh table binding
+            }
+          },
+          error => {
+            console.error('Update failed', error);
+          }
+        );
+      }
+    });
+  }
+  openCreateProductDialog() {
+    const dialogRef = this.dialog.open(CreateProductDialogComponent, {
+      width: '500px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.productService.createProduct(result).subscribe(
+          newProduct => {
+            this.products.push(newProduct);
+            this.productTableConfig.dataSource = [...this.products]; // Refresh table
+          },
+          error => console.error('Create failed', error)
+        );
+      }
+    });
+  }
   deleteProduct(product: Product) {
     console.log('Deleting product:', product);
   }

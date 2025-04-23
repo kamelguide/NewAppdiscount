@@ -1,0 +1,33 @@
+<h2 mat-dialog-title>Envoyer un Coupon</h2>
+
+<div mat-dialog-content [formGroup]="form">
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" type="email" placeholder="ex: client@mail.com" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Référence Produit</mat-label>
+    <input matInput formControlName="productReference" placeholder="ex: REF-12345" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>Statut</mat-label>
+    <input matInput formControlName="status" placeholder="send, used, expired..." />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>ID Lien</mat-label>
+    <input matInput type="number" formControlName="idLink" placeholder="ex: 45" />
+  </mat-form-field>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+  <div class="text-success" *ngIf="successMessage">{{ successMessage }}</div>
+  <div class="text-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Annuler</button>
+  <button mat-raised-button color="primary" (click)="submit()" [disabled]="loading">Envoyer</button>
+</div>

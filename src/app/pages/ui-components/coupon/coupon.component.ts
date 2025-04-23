@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
 import { GetCouponTracking } from "./coupon.data";
-import { CouponService } from './coupon.service';  // Import your service
+import { CouponService } from './coupon.service';
+import {CreateCouponDialogComponent} from "./create-coupon-dialog/create-coupon-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {MatButton} from "@angular/material/button";  // Import your service
 
 @Component({
   selector: 'app-coupon',
   standalone: true,
-  imports: [MainTableComponent],
+  imports: [MainTableComponent, MatButton],
   templateUrl: './coupon.component.html',
   styleUrls: ['./coupon.component.scss']
 })
@@ -72,7 +75,7 @@ export class CouponComponent implements OnInit {
     ]
   };
 
-  constructor(private couponService: CouponService) {}
+  constructor(private couponService: CouponService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getCoupons();  // Fetch data when the component initializes
@@ -91,7 +94,7 @@ export class CouponComponent implements OnInit {
   }
 
   editCoupon(coupon: GetCouponTracking) {
-    console.log('Editing coupon:', coupon);
+
   }
 
   deleteCoupon(coupon: GetCouponTracking) {
@@ -100,5 +103,10 @@ export class CouponComponent implements OnInit {
 
   viewCoupon(coupon: GetCouponTracking) {
     console.log('Viewing coupon:', coupon);
+  }
+  openCouponDialog() {
+    this.dialog.open(CreateCouponDialogComponent, {
+      width: '500px'
+    });
   }
 }
