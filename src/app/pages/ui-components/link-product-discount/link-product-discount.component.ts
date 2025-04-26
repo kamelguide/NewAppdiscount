@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MainTableComponent } from "../main-table/main-table.component";
 import { ProductDiscountLink } from "./linkProduct.data";
-import { LinkProductService } from './link-product.service';  // Import LinkProductService
+import { LinkProductService } from './link-product.service';
+import {MatDialog} from "@angular/material/dialog";
+import {EditLinkedProductComponent} from "./edit-linked-product/edit-linked-product.component";  // Import LinkProductService
 
 @Component({
   selector: 'app-link-product-discount',
@@ -84,7 +86,7 @@ export class LinkProductDiscountComponent implements OnInit {
     ]
   };
 
-  constructor(private linkProductService: LinkProductService) {}
+  constructor(private linkProductService: LinkProductService,   private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getLinkedProducts();  // Fetch data when the component initializes
@@ -104,9 +106,30 @@ export class LinkProductDiscountComponent implements OnInit {
   }
 
   editLink(link: ProductDiscountLink) {
-    console.log('Editing link:', link);
-  }
+    const dialogRef = this.dialog.open(EditLinkedProductComponent, {
+      width: '400px',
+      data: { jours: link.jours, active: link.active }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const request = {
+
+          jours: result.jours,
+          active: result.active
+        };
+        this.linkProductService.prolongerLien(link.idLink, request).subscribe({
+          next: (message) => {
+            console.log('Link updated successfully:', message);
+            this.getLinkedProducts(); // refresh list after update
+          },
+          error: (error) => {
+            console.error('Error updating link:', error);
+          }
+        });
+      }
+    });
+  }
   deleteLink(link: ProductDiscountLink) {
     console.log('Deleting link:', link);
   }

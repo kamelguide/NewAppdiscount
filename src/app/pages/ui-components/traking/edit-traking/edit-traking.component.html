@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Edit Tracking Data</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Pagename</mat-label>
+    <input matInput [(ngModel)]="trackingData.pagename">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Time Spent (seconds)</mat-label>
+    <input matInput type="number" [(ngModel)]="trackingData.timespent">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Clicks</mat-label>
+    <input matInput type="number" [(ngModel)]="trackingData.clicks">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Longitude</mat-label>
+    <input matInput type="number" [(ngModel)]="trackingData.longitude">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Latitude</mat-label>
+    <input matInput type="number" [(ngModel)]="trackingData.latitude">
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button color="primary" [disabled]="!trackingData.pagename || !trackingData.timespent" (click)="save()">OK</button>
+</mat-dialog-actions>

@@ -14,7 +14,10 @@ export interface ProductDiscountLink {
   idProduct: number;
 
 }
-
+export interface LinkProdDiscRequest {
+  jours: number;
+  active: boolean;
+}
 // export interface ProductDiscountLink {
 //   idLink: number;
 //   active: boolean;

@@ -1,5 +1,5 @@
 // main-table.component.ts
-import { Component, Input } from '@angular/core';
+import {Component, Input, ViewChild, ViewContainerRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from "../../../material.module";
 import { MatMenuModule } from "@angular/material/menu";
@@ -35,6 +35,8 @@ export interface TableConfig {
   styleUrls: ['./main-table.component.scss']
 })
 export class MainTableComponent {
+  @ViewChild('cellContainer', { read: ViewContainerRef }) cellContainer!: ViewContainerRef;
+
   @Input() config: TableConfig = {
     columns: [],
     dataSource: [],

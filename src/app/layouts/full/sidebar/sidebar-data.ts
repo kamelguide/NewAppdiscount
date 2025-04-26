@@ -33,7 +33,11 @@ export const navItems: NavItem[] = [
     route: '/ui-components/linkedProductDiscount',
   },
 
-
+  {
+    displayName: 'Tracking',
+    iconName: 'discount',
+    route: '/ui-components/trakingTable',
+  },
 
 
 

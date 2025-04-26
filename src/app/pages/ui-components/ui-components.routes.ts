@@ -7,6 +7,7 @@ import {MainTableComponent} from "./main-table/main-table.component";
 import {CouponComponent} from "./coupon/coupon.component";
 import {DiscountComponent} from "./discount/discount.component";
 import {LinkProductDiscountComponent} from "./link-product-discount/link-product-discount.component";
+import {TrakingComponent} from "./traking/traking.component";
 
 export const UiComponentsRoutes: Routes = [
   {
@@ -27,7 +28,10 @@ export const UiComponentsRoutes: Routes = [
         component: MainTableComponent,
       },
 
-
+      {
+        path: 'trakingTable',
+        component: TrakingComponent,
+      },
       {
         path: 'tables',
         component: AppTablesComponent,

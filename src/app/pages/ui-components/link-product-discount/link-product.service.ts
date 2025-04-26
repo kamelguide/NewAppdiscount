@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {ProductDiscountLink} from "./linkProduct.data";
+import {LinkProdDiscRequest, ProductDiscountLink} from "./linkProduct.data";
 
 
 @Injectable({
@@ -16,5 +16,8 @@ export class LinkProductService {
   // Get all coupons
   getLinkedProducts(): Observable<ProductDiscountLink[]> {
     return this.http.get<ProductDiscountLink[]>(`${this.apiUrl}/aapiee/getlinks`);
+  }
+  prolongerLien(id: number, request: LinkProdDiscRequest): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/aapiee/prolonger/${id}`, request);
   }
 }
