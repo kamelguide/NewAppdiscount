@@ -15,7 +15,7 @@ export class TrakingService {
 
   // Get all coupons
   getTracking(): Observable<TrackingLinkDTO[]> {
-    return this.http.get<TrackingLinkDTO[]>(`${this.apiUrl}/Api/all`);
+    return this.http.get<TrackingLinkDTO[]>(`${this.apiUrl}/Api/trackingData`);
   }
   trackClientData(idproduct: number, sessionId: string, trackingData: TrackingData): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/Api/tracking/${idproduct}/${sessionId}`, trackingData);

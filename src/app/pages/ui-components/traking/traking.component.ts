@@ -3,14 +3,17 @@ import { TrackingData, TrackingLinkDTO } from './traking.data';
 import { MainTableComponent, TableColumn } from '../main-table/main-table.component';
 import { TrakingService } from './traking.service';
 import { EditTrakingComponent } from './edit-traking/edit-traking.component';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';  // Correct import
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatButton} from "@angular/material/button";  // Correct import
 
 @Component({
   selector: 'app-traking',
   standalone: true,
   imports: [
     MainTableComponent,
-    MatDialogModule,  // Import only MatDialogModule
+    MatDialogModule,
+    MatButton,
+    // Import only MatDialogModule
   ],
   templateUrl: './traking.component.html',
   styleUrls: ['./traking.component.scss']
@@ -20,32 +23,57 @@ export class TrakingComponent implements OnInit {
 
   columns: TableColumn[] = [
     {
-      name: 'linkId',
-      header: 'Link ID',
-      cell: (element: TrackingLinkDTO) => `${element.linkId}`
+      name: 'id',
+      header: 'ID',
+      cell: (element: TrackingLinkDTO) => `${element.id}`
     },
     {
-      name: 'productName',
-      header: 'Product Name',
-      cell: (element: TrackingLinkDTO) => `${element.productName}`
+      name: 'idproduct',
+      header: 'Product ID',
+      cell: (element: TrackingLinkDTO) => `${element.idproduct}`
     },
     {
-      name: 'active',
-      header: 'Active',
-      cell: (element: TrackingLinkDTO) => `${element.active ? 'Yes' : 'No'}`
+      name: 'pagename',
+      header: 'Page Name',
+      cell: (element: TrackingLinkDTO) => `${element.pagename}`
     },
     {
-      name: 'duration',
-      header: 'Duration (Days)',
-      cell: (element: TrackingLinkDTO) => `${element.duration}`
-    }
+      name: 'timespent',
+      header: 'Time Spent',
+      cell: (element: TrackingLinkDTO) => `${element.timespent} seconds`
+    },
+    {
+      name: 'clicks',
+      header: 'Clicks',
+      cell: (element: TrackingLinkDTO) => `${element.clicks}`
+    },
+    {
+      name: 'entryTimeFormatted',
+      header: 'Entry Time',
+      cell: (element: TrackingLinkDTO) => `${element.entryTimeFormatted}`
+    },
+    {
+      name: 'latitude',
+      header: 'Latitude',
+      cell: (element: TrackingLinkDTO) => `${element.latitude}`
+    },
+    {
+      name: 'longitude',
+      header: 'Longitude',
+      cell: (element: TrackingLinkDTO) => `${element.longitude}`
+    },
+    {
+      name: 'sessionId',
+      header: 'Session ID',
+      cell: (element: TrackingLinkDTO) => `${element.sessionId}`
+    },
   ];
 
   tableConfig = {
     columns: this.columns,
     dataSource: this.trackingLinks,
     title: 'Tracking Links',
-    showMenu: false,
+    showMenu: true, // Set to true if you want a menu
     menuItems: [
       {
         icon: 'edit',
@@ -58,6 +86,7 @@ export class TrakingComponent implements OnInit {
         action: (element: TrackingLinkDTO) => this.deleteLink(element)
       }
     ]
+
   };
 
   constructor(private trackingLinkService: TrakingService, private dialog: MatDialog) {}
@@ -101,7 +130,7 @@ export class TrakingComponent implements OnInit {
         };
 
         // Call trackClientData to update the backend
-        this.trackingLinkService.trackClientData(link.productId, link.sessionId, trackingData).subscribe({
+        this.trackingLinkService.trackClientData(link.idproduct, link.sessionId, trackingData).subscribe({
           next: () => {
             console.log('Tracking data updated successfully');
             this.fetchTrackingLinks(); // Refresh the list after update
