@@ -22,8 +22,7 @@ export class ProductsComponent implements OnInit {
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (product: Product) => this.editProduct(product) },
-      { icon: 'delete', label: 'Delete', action: (product: Product) => this.deleteProduct(product) },
-      { icon: 'visibility', label: 'View', action: (product: Product) => this.viewProduct(product) }
+
     ],
     columns: [
       {

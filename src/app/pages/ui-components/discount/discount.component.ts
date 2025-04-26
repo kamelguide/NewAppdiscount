@@ -21,8 +21,7 @@ export class DiscountComponent implements OnInit {
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (discount: Discount) => this.editDiscount(discount) },
-      { icon: 'delete', label: 'Delete', action: (discount: Discount) => this.deleteDiscount(discount) },
-      { icon: 'visibility', label: 'View', action: (discount: Discount) => this.viewDiscount(discount) }
+
     ],
     columns: [
       {

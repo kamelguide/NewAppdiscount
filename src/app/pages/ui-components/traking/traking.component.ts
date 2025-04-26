@@ -79,11 +79,6 @@ export class TrakingComponent implements OnInit {
         icon: 'edit',
         label: 'Edit',
         action: (element: TrackingLinkDTO) => this.editLink(element)
-      },
-      {
-        icon: 'delete',
-        label: 'Delete',
-        action: (element: TrackingLinkDTO) => this.deleteLink(element)
       }
     ]
 

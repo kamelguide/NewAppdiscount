@@ -31,8 +31,7 @@ export class CouponComponent implements OnInit  {
     showMenu: true,
     menuItems: [
       { icon: 'edit', label: 'Edit', action: (coupon: GetCouponTracking) => this.startEditing(coupon) },
-      { icon: 'delete', label: 'Delete', action: (coupon: GetCouponTracking) => this.deleteCoupon(coupon) },
-      { icon: 'visibility', label: 'View', action: (coupon: GetCouponTracking) => this.viewCoupon(coupon) }
+
     ],
     columns: [
       {
